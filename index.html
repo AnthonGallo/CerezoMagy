@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Árbol de Cerezo para Ti</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #1a2a6c, #b21f1f, #fdbb2d);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 2s ease;
+        }
+
+        body.night-mode {
+            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .scene {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            margin-bottom: 30px;
+        }
+
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to top, #3a2511, #5d4037);
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .tree-container {
+            position: absolute;
+            bottom: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 450px;
+            z-index: 2;
+        }
+
+        .trunk {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 250px;
+            background: linear-gradient(to right, #5d4037, #3e2723, #5d4037);
+            border-radius: 40px;
+            z-index: 2;
+        }
+
+        .branches {
+            position: absolute;
+            bottom: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 300px;
+            z-index: 3;
+        }
+
+        .branch {
+            position: absolute;
+            background: linear-gradient(to bottom, #5d4037, #3e2723);
+            border-radius: 10px;
+            transform-origin: bottom center;
+        }
+
+        .blossoms {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+        }
+
+        .blossom {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: radial-gradient(circle at 30% 30%, #ffebee, #f8bbd0, #f48fb1);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 0 0 10px rgba(255, 192, 203, 0.5);
+            opacity: 0.9;
+            animation: blossom-float 8s infinite ease-in-out;
+        }
+
+        .blossom.petal {
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle at 30% 30%, #fff, #f8bbd0);
+        }
+
+        .falling-petals {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .petal {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle at 30% 30%, #fff, #f8bbd0);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .moon {
+            position: absolute;
+            top: 50px;
+            right: 100px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, #fff, #e0e0e0);
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.8);
+            opacity: 0;
+            transition: opacity 2s ease;
+            z-index: 1;
+        }
+
+        .night-mode .moon {
+            opacity: 1;
+        }
+
+        .sun {
+            position: absolute;
+            top: 50px;
+            right: 100px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, #ffeb3b, #ff9800);
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(255, 152, 0, 0.8);
+            opacity: 1;
+            transition: opacity 2s ease;
+            z-index: 1;
+        }
+
+        .night-mode .sun {
+            opacity: 0;
+        }
+
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 2s ease;
+            z-index: 0;
+        }
+
+        .night-mode .stars {
+            opacity: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite ease-in-out;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            z-index: 10;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .message-container {
+            position: absolute;
+            top: 20px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .message {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-radius: 15px;
+            color: white;
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.5s ease;
+        }
+
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .special-message {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffeb3b;
+            text-shadow: 0 0 10px rgba(255, 235, 59, 0.5);
+            font-style: italic;
+        }
+
+        .fireflies {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 6;
+        }
+
+        .firefly {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #e1f5fe;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px #81d4fa;
+            opacity: 0;
+        }
+
+        .night-mode .firefly {
+            opacity: 0.7;
+        }
+
+        @keyframes blossom-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes petal-fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(600px) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes firefly {
+            0%, 100% { opacity: 0; transform: translate(0, 0); }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="message-container">
+            <div class="message" id="mainMessage">Cada pétalo de este cerezo representa una de tus cualidades especiales</div>
+        </div>
+
+        <div class="scene">
+            <div class="moon"></div>
+            <div class="sun"></div>
+            <div class="stars" id="stars"></div>
+            <div class="fireflies" id="fireflies"></div>
+            
+            <div class="tree-container">
+                <div class="trunk"></div>
+                <div class="branches" id="branches"></div>
+                <div class="blossoms" id="blossoms"></div>
+            </div>
+            
+            <div class="falling-petals" id="fallingPetals"></div>
+            <div class="ground"></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="dayNightBtn">Cambiar a Noche</button>
+            <button class="btn" id="blossomBtn">Hacer Florecer</button>
+            <button class="btn" id="messageBtn">Mensaje Especial</button>
+        </div>
+    </div>
+
+    <script>
+        // Elementos DOM
+        const body = document.body;
+        const dayNightBtn = document.getElementById('dayNightBtn');
+        const blossomBtn = document.getElementById('blossomBtn');
+        const messageBtn = document.getElementById('messageBtn');
+        const mainMessage = document.getElementById('mainMessage');
+        const branches = document.getElementById('branches');
+        const blossoms = document.getElementById('blossoms');
+        const fallingPetals = document.getElementById('fallingPetals');
+        const stars = document.getElementById('stars');
+        const fireflies = document.getElementById('fireflies');
+
+        // Estado
+        let isNight = false;
+        let isBlooming = false;
+        let messageIndex = 0;
+
+        // Mensajes especiales
+        const messages = [
+            "Eres la persona más valiente que conozco",
+            "Tu sinceridad ilumina todo a tu alrededor",
+            "Tu belleza interior brilla más que cualquier estrella",
+            "Eres única, especial e irrepetible",
+            "Tu sonrisa puede cambiar cualquier día gris",
+            "Admiro tu fuerza y tu capacidad de superación",
+            "Eres la dueña de la noche y la reina del día"
+        ];
+
+        // Inicialización
+        function init() {
+            createBranches();
+            createStars();
+            createFireflies();
+            showMessage(messages[0]);
+            
+            // Iniciar caída de pétalos
+            setInterval(createFallingPetal, 500);
+        }
+
+        // Crear ramas del árbol
+        function createBranches() {
+            branches.innerHTML = '';
+            
+            // Rama principal
+            createBranch(250, 0, 20, 150, -15);
+            createBranch(250, 0, 20, 150, 15);
+            
+            // Ramas secundarias
+            createBranch(230, 80, 15, 120, -25);
+            createBranch(270, 80, 15, 120, 25);
+            createBranch(200, 130, 12, 100, -35);
+            createBranch(300, 130, 12, 100, 35);
+            createBranch(170, 180, 10, 80, -45);
+            createBranch(330, 180, 10, 80, 45);
+            
+            // Ramas pequeñas
+            for (let i = 0; i < 20; i++) {
+                const x = 150 + Math.random() * 200;
+                const y = 50 + Math.random() * 200;
+                const width = 5 + Math.random() * 8;
+                const height = 30 + Math.random() * 70;
+                const rotation = -30 + Math.random() * 60;
+                
+                createBranch(x, y, width, height, rotation);
+            }
+        }
+
+        function createBranch(x, y, width, height, rotation) {
+            const branch = document.createElement('div');
+            branch.className = 'branch';
+            branch.style.width = `${width}px`;
+            branch.style.height = `${height}px`;
+            branch.style.left = `${x}px`;
+            branch.style.bottom = `${y}px`;
+            branch.style.transform = `rotate(${rotation}deg)`;
+            
+            branches.appendChild(branch);
+        }
+
+        // Crear flores en el árbol
+        function createBlossoms() {
+            blossoms.innerHTML = '';
+            
+            for (let i = 0; i < 150; i++) {
+                const blossom = document.createElement('div');
+                blossom.className = 'blossom';
+                
+                // Posicionar en las ramas
+                const x = 100 + Math.random() * 400;
+                const y = 50 + Math.random() * 300;
+                const size = 15 + Math.random() * 15;
+                const delay = Math.random() * 8;
+                
+                blossom.style.width = `${size}px`;
+                blossom.style.height = `${size}px`;
+                blossom.style.left = `${x}px`;
+                blossom.style.top = `${y}px`;
+                blossom.style.animationDelay = `${delay}s`;
+                
+                // Algunas flores serán pétalos individuales
+                if (Math.random() > 0.7) {
+                    blossom.classList.add('petal');
+                }
+                
+                blossoms.appendChild(blossom);
+            }
+            
+            isBlooming = true;
+        }
+
+        // Crear estrellas
+        function createStars() {
+            stars.innerHTML = '';
+            
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                const size = Math.random() * 3;
+                const left = Math.random() * 100;
+                const top = Math.random() * 70;
+                const delay = Math.random() * 5;
+                
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${left}%`;
+                star.style.top = `${top}%`;
+                star.style.animationDelay = `${delay}s`;
+                
+                stars.appendChild(star);
+            }
+        }
+
+        // Crear luciérnagas
+        function createFireflies() {
+            fireflies.innerHTML = '';
+            
+            for (let i = 0; i < 30; i++) {
+                const firefly = document.createElement('div');
+                firefly.className = 'firefly';
+                
+                const left = Math.random() * 100;
+                const top = 20 + Math.random() * 60;
+                const duration = 10 + Math.random() * 20;
+                const delay = Math.random() * 20;
+                
+                firefly.style.left = `${left}%`;
+                firefly.style.top = `${top}%`;
+                firefly.style.animation = `firefly ${duration}s ${delay}s infinite`;
+                
+                fireflies.appendChild(firefly);
+            }
+        }
+
+        // Crear pétalos cayendo
+        function createFallingPetal() {
+            if (!isBlooming) return;
+            
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            
+            const left = Math.random() * 100;
+            const size = 5 + Math.random() * 10;
+            const duration = 5 + Math.random() * 10;
+            const delay = Math.random() * 5;
+            const rotation = Math.random() * 360;
+            
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            petal.style.left = `${left}%`;
+            petal.style.animation = `petal-fall ${duration}s ${delay}s linear infinite`;
+            petal.style.transform = `rotate(${rotation}deg)`;
+            
+            fallingPetals.appendChild(petal);
+            
+            // Eliminar después de la animación
+            setTimeout(() => {
+                if (petal.parentNode) {
+                    petal.parentNode.removeChild(petal);
+                }
+            }, (duration + delay) * 1000);
+        }
+
+        // Mostrar mensaje
+        function showMessage(text) {
+            mainMessage.textContent = text;
+            mainMessage.classList.add('show');
+            
+            setTimeout(() => {
+                mainMessage.classList.remove('show');
+            }, 4000);
+        }
+
+        // Event Listeners
+        dayNightBtn.addEventListener('click', () => {
+            isNight = !isNight;
+            body.classList.toggle('night-mode', isNight);
+            dayNightBtn.textContent = isNight ? 'Cambiar a Día' : 'Cambiar a Noche';
+            
+            if (isNight) {
+                showMessage("Eres la dueña de la noche, misteriosa y fascinante");
+            } else {
+                showMessage("Eres la reina del día, llena de luz y energía");
+            }
+        });
+
+        blossomBtn.addEventListener('click', () => {
+            if (!isBlooming) {
+                createBlossoms();
+                blossomBtn.textContent = 'Detener Floración';
+                showMessage("Como este cerezo, floreces con belleza y gracia");
+            } else {
+                blossoms.innerHTML = '';
+                fallingPetals.innerHTML = '';
+                blossomBtn.textContent = 'Hacer Florecer';
+                isBlooming = false;
+                showMessage("Tus cualidades permanecen, incluso cuando no son visibles");
+            }
+        });
+
+        messageBtn.addEventListener('click', () => {
+            messageIndex = (messageIndex + 1) % messages.length;
+            showMessage(messages[messageIndex]);
+            
+            // Destacar el mensaje especial
+            if (messages[messageIndex].includes("dueña") || messages[messageIndex].includes("reina")) {
+                mainMessage.classList.add('special-message');
+            } else {
+                mainMessage.classList.remove('special-message');
+            }
+        });
+
+        // Inicializar
+        init();
+    </script>
+</body>
+</html>
