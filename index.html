@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Árbol de Cerezo para Ti</title>
+    <title>Árbol de Cerezo 3D</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -13,57 +14,61 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to bottom, #1a2a6c, #b21f1f, #fdbb2d);
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
             height: 100vh;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: background 2s ease;
+            transition: background 2.5s ease;
+            position: relative;
         }
 
         body.night-mode {
-            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+            background: linear-gradient(to bottom, #0a0a2a, #1a1a4a, #2d2d5a);
         }
 
         .container {
             position: relative;
             width: 100%;
-            max-width: 1200px;
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 10;
+            perspective: 1000px;
         }
 
         .scene {
             position: relative;
-            width: 800px;
-            height: 600px;
-            margin-bottom: 30px;
+            width: 90%;
+            max-width: 900px;
+            height: 70vh;
+            margin-bottom: 20px;
+            transform-style: preserve-3d;
         }
 
         .ground {
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 150px;
-            background: linear-gradient(to top, #3a2511, #5d4037);
+            height: 20%;
+            background: linear-gradient(to top, #3a2511, #5d4037, #8d6e63);
             border-radius: 10px 10px 0 0;
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
             z-index: 1;
         }
 
         .tree-container {
             position: absolute;
-            bottom: 150px;
+            bottom: 20%;
             left: 50%;
             transform: translateX(-50%);
-            width: 600px;
-            height: 450px;
+            width: 80%;
+            height: 80%;
             z-index: 2;
+            transform-style: preserve-3d;
         }
 
         .trunk {
@@ -71,21 +76,23 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px;
-            height: 250px;
+            width: 60px;
+            height: 40%;
             background: linear-gradient(to right, #5d4037, #3e2723, #5d4037);
-            border-radius: 40px;
+            border-radius: 30px;
             z-index: 2;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .branches {
             position: absolute;
-            bottom: 200px;
+            bottom: 40%;
             left: 50%;
             transform: translateX(-50%);
-            width: 500px;
-            height: 300px;
+            width: 100%;
+            height: 60%;
             z-index: 3;
+            transform-style: preserve-3d;
         }
 
         .branch {
@@ -93,6 +100,7 @@
             background: linear-gradient(to bottom, #5d4037, #3e2723);
             border-radius: 10px;
             transform-origin: bottom center;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
         }
 
         .blossoms {
@@ -102,6 +110,7 @@
             width: 100%;
             height: 100%;
             z-index: 4;
+            transform-style: preserve-3d;
         }
 
         .blossom {
@@ -110,9 +119,10 @@
             height: 25px;
             background: radial-gradient(circle at 30% 30%, #ffebee, #f8bbd0, #f48fb1);
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            box-shadow: 0 0 10px rgba(255, 192, 203, 0.5);
+            box-shadow: 0 0 15px rgba(255, 192, 203, 0.6);
             opacity: 0.9;
             animation: blossom-float 8s infinite ease-in-out;
+            transform-style: preserve-3d;
         }
 
         .blossom.petal {
@@ -139,6 +149,7 @@
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             opacity: 0.8;
             pointer-events: none;
+            transform-style: preserve-3d;
         }
 
         .moon {
@@ -199,31 +210,101 @@
             animation: twinkle 5s infinite ease-in-out;
         }
 
+        .controls-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100;
+            transition: transform 0.5s ease;
+        }
+
+        .controls-container.hidden {
+            transform: translateX(-50%) translateY(120px);
+        }
+
+        .controls-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .controls-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
         .controls {
             display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-            z-index: 10;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
 
         .btn {
-            padding: 12px 25px;
+            padding: 12px 20px;
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50px;
             color: white;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
         }
 
         .btn:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
         }
 
         .message-container {
@@ -241,7 +322,7 @@
             padding: 20px 30px;
             border-radius: 15px;
             color: white;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 500;
             margin-bottom: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
@@ -256,7 +337,7 @@
         }
 
         .special-message {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             color: #ffeb3b;
             text-shadow: 0 0 10px rgba(255, 235, 59, 0.5);
@@ -288,8 +369,8 @@
         }
 
         @keyframes blossom-float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(5deg); }
+            0%, 100% { transform: translateY(0) rotate(0deg) translateZ(0); }
+            50% { transform: translateY(-10px) rotate(5deg) translateZ(10px); }
         }
 
         @keyframes twinkle {
@@ -297,24 +378,94 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-
         @keyframes petal-fall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+            0% { transform: translateY(-100px) rotate(0deg) translateZ(0); opacity: 0; }
             10% { opacity: 0.8; }
             90% { opacity: 0.8; }
-            100% { transform: translateY(600px) rotate(360deg); opacity: 0; }
+            100% { transform: translateY(600px) rotate(360deg) translateZ(20px); opacity: 0; }
         }
 
         @keyframes firefly {
-            0%, 100% { opacity: 0; transform: translate(0, 0); }
+            0%, 100% { opacity: 0; transform: translate(0, 0) translateZ(0); }
             10% { opacity: 1; }
             90% { opacity: 1; }
+        }
+
+        /* Responsive para móviles */
+        @media (max-width: 768px) {
+            .scene {
+                width: 95%;
+                height: 60vh;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+                border-radius: 20px;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 12px;
+            }
+            
+            .message {
+                font-size: 16px;
+                padding: 15px 20px;
+            }
+            
+            .special-message {
+                font-size: 18px;
+            }
+            
+            .moon, .sun {
+                width: 50px;
+                height: 50px;
+                top: 30px;
+                right: 30px;
+            }
+            
+            .trunk {
+                width: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .scene {
+                height: 50vh;
+            }
+            
+            .controls {
+                padding: 10px 15px;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 11px;
+            }
+            
+            .message {
+                font-size: 14px;
+                padding: 12px 15px;
+            }
+            
+            .special-message {
+                font-size: 16px;
+            }
+            
+            .fullscreen-btn {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            
+            .controls-toggle {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
@@ -339,7 +490,16 @@
             <div class="falling-petals" id="fallingPetals"></div>
             <div class="ground"></div>
         </div>
+    </div>
 
+    <button class="fullscreen-btn" id="fullscreenBtn">
+        <i class="fas fa-expand"></i>
+    </button>
+
+    <div class="controls-container" id="controlsContainer">
+        <div class="controls-toggle" id="controlsToggle">
+            <i class="fas fa-chevron-up" id="toggleIcon"></i>
+        </div>
         <div class="controls">
             <button class="btn" id="dayNightBtn">Cambiar a Noche</button>
             <button class="btn" id="blossomBtn">Hacer Florecer</button>
@@ -359,11 +519,16 @@
         const fallingPetals = document.getElementById('fallingPetals');
         const stars = document.getElementById('stars');
         const fireflies = document.getElementById('fireflies');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const controlsContainer = document.getElementById('controlsContainer');
+        const controlsToggle = document.getElementById('controlsToggle');
+        const toggleIcon = document.getElementById('toggleIcon');
 
         // Estado
         let isNight = false;
         let isBlooming = false;
         let messageIndex = 0;
+        let controlsVisible = true;
 
         // Mensajes especiales
         const messages = [
@@ -387,65 +552,72 @@
             setInterval(createFallingPetal, 500);
         }
 
-        // Crear ramas del árbol
+        // Crear ramas del árbol con efecto 3D
         function createBranches() {
             branches.innerHTML = '';
             
-            // Rama principal
-            createBranch(250, 0, 20, 150, -15);
-            createBranch(250, 0, 20, 150, 15);
+            // Rama principal central
+            createBranch(50, 0, 20, 200, -5, 5);
+            createBranch(50, 0, 20, 180, 5, 5);
+            
+            // Ramas laterales principales
+            createBranch(40, 60, 15, 150, -25, 10);
+            createBranch(60, 60, 15, 150, 25, 10);
             
             // Ramas secundarias
-            createBranch(230, 80, 15, 120, -25);
-            createBranch(270, 80, 15, 120, 25);
-            createBranch(200, 130, 12, 100, -35);
-            createBranch(300, 130, 12, 100, 35);
-            createBranch(170, 180, 10, 80, -45);
-            createBranch(330, 180, 10, 80, 45);
+            createBranch(30, 120, 12, 120, -40, 15);
+            createBranch(70, 120, 12, 120, 40, 15);
             
-            // Ramas pequeñas
-            for (let i = 0; i < 20; i++) {
-                const x = 150 + Math.random() * 200;
-                const y = 50 + Math.random() * 200;
-                const width = 5 + Math.random() * 8;
-                const height = 30 + Math.random() * 70;
-                const rotation = -30 + Math.random() * 60;
+            // Ramas terciarias
+            createBranch(20, 180, 10, 100, -55, 20);
+            createBranch(80, 180, 10, 100, 55, 20);
+            
+            // Ramas pequeñas adicionales para realismo
+            for (let i = 0; i < 25; i++) {
+                const x = 10 + Math.random() * 80;
+                const y = 30 + Math.random() * 150;
+                const width = 4 + Math.random() * 8;
+                const height = 20 + Math.random() * 80;
+                const rotation = -60 + Math.random() * 120;
+                const z = Math.random() * 30;
                 
-                createBranch(x, y, width, height, rotation);
+                createBranch(x, y, width, height, rotation, z);
             }
         }
 
-        function createBranch(x, y, width, height, rotation) {
+        function createBranch(x, y, width, height, rotation, z) {
             const branch = document.createElement('div');
             branch.className = 'branch';
             branch.style.width = `${width}px`;
             branch.style.height = `${height}px`;
-            branch.style.left = `${x}px`;
+            branch.style.left = `${x}%`;
             branch.style.bottom = `${y}px`;
-            branch.style.transform = `rotate(${rotation}deg)`;
+            branch.style.transform = `rotate(${rotation}deg) translateZ(${z}px)`;
             
             branches.appendChild(branch);
         }
 
-        // Crear flores en el árbol
+        // Crear flores en el árbol con efecto 3D
         function createBlossoms() {
             blossoms.innerHTML = '';
             
-            for (let i = 0; i < 150; i++) {
+            for (let i = 0; i < 200; i++) {
                 const blossom = document.createElement('div');
                 blossom.className = 'blossom';
                 
                 // Posicionar en las ramas
-                const x = 100 + Math.random() * 400;
-                const y = 50 + Math.random() * 300;
+                const x = 5 + Math.random() * 90;
+                const y = 50 + Math.random() * 250;
                 const size = 15 + Math.random() * 15;
                 const delay = Math.random() * 8;
+                const z = Math.random() * 40;
                 
                 blossom.style.width = `${size}px`;
                 blossom.style.height = `${size}px`;
-                blossom.style.left = `${x}px`;
+                blossom.style.left = `${x}%`;
                 blossom.style.top = `${y}px`;
                 blossom.style.animationDelay = `${delay}s`;
+                blossom.style.transform = `translateZ(${z}px)`;
                 
                 // Algunas flores serán pétalos individuales
                 if (Math.random() > 0.7) {
@@ -462,7 +634,7 @@
         function createStars() {
             stars.innerHTML = '';
             
-            for (let i = 0; i < 200; i++) {
+            for (let i = 0; i < 250; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
                 
@@ -470,12 +642,14 @@
                 const left = Math.random() * 100;
                 const top = Math.random() * 70;
                 const delay = Math.random() * 5;
+                const z = Math.random() * 50;
                 
                 star.style.width = `${size}px`;
                 star.style.height = `${size}px`;
                 star.style.left = `${left}%`;
                 star.style.top = `${top}%`;
                 star.style.animationDelay = `${delay}s`;
+                star.style.transform = `translateZ(${z}px)`;
                 
                 stars.appendChild(star);
             }
@@ -485,7 +659,7 @@
         function createFireflies() {
             fireflies.innerHTML = '';
             
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < 40; i++) {
                 const firefly = document.createElement('div');
                 firefly.className = 'firefly';
                 
@@ -493,16 +667,18 @@
                 const top = 20 + Math.random() * 60;
                 const duration = 10 + Math.random() * 20;
                 const delay = Math.random() * 20;
+                const z = Math.random() * 100;
                 
                 firefly.style.left = `${left}%`;
                 firefly.style.top = `${top}%`;
                 firefly.style.animation = `firefly ${duration}s ${delay}s infinite`;
+                firefly.style.transform = `translateZ(${z}px)`;
                 
                 fireflies.appendChild(firefly);
             }
         }
 
-        // Crear pétalos cayendo
+        // Crear pétalos cayendo con efecto 3D
         function createFallingPetal() {
             if (!isBlooming) return;
             
@@ -514,12 +690,13 @@
             const duration = 5 + Math.random() * 10;
             const delay = Math.random() * 5;
             const rotation = Math.random() * 360;
+            const z = Math.random() * 50;
             
             petal.style.width = `${size}px`;
             petal.style.height = `${size}px`;
             petal.style.left = `${left}%`;
             petal.style.animation = `petal-fall ${duration}s ${delay}s linear infinite`;
-            petal.style.transform = `rotate(${rotation}deg)`;
+            petal.style.transform = `rotate(${rotation}deg) translateZ(${z}px)`;
             
             fallingPetals.appendChild(petal);
             
@@ -539,6 +716,28 @@
             setTimeout(() => {
                 mainMessage.classList.remove('show');
             }, 4000);
+        }
+
+        // Pantalla completa
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+                fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+                }
+            }
+        }
+
+        // Ocultar/mostrar controles
+        function toggleControls() {
+            controlsVisible = !controlsVisible;
+            controlsContainer.classList.toggle('hidden', !controlsVisible);
+            toggleIcon.className = controlsVisible ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
         }
 
         // Event Listeners
@@ -579,6 +778,9 @@
                 mainMessage.classList.remove('special-message');
             }
         });
+
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        controlsToggle.addEventListener('click', toggleControls);
 
         // Inicializar
         init();
