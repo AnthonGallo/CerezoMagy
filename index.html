@@ -857,7 +857,7 @@
             blossomsContainer.innerHTML = '';
             
             // Pétalos individuales en la parte superior del árbol
-            for (let i = 0; i < 4000; i++) {
+            for (let i = 0; i < 2500; i++) {
                 const petal = document.createElement('div');
                 petal.className = 'single-petal';
                 
@@ -865,7 +865,7 @@
                 let x, y;
                 do {
                     x = Math.random() * 100;
-                    y = Math.random() * 40;
+                    y = Math.random() * 35;
                 } while (x > 40 && x < 60 && y < 20);
                 
                 petal.style.left = `${x}%`;
@@ -976,6 +976,7 @@
     </script>
 </body>
 </html>
+
 
 
 
