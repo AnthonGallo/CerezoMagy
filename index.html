@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Árbol de Cerezo con Pétalos Superiores</title>
+    <title>Tus cualidades, Pequeña Magy</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -716,7 +716,7 @@
         <div class="controls">
             <button class="btn" id="dayNightBtn">Modo Noche</button>
             <button class="btn" id="blossomBtn">Hacer Florecer</button>
-            <button class="btn" id="messageBtn">Mensaje Especial</button>
+            <button class="btn" id="messageBtn">Mensajitos para tí</button>
         </div>
     </div>
 
@@ -747,12 +747,12 @@
 
         const messages = [
             "Eres la persona más valiente que conozco",
-            "Tu sinceridad ilumina todo a tu alrededor",
-            "Tu belleza interior brilla más que cualquier estrella",
-            "Eres única, especial e irrepetible",
+            "Eres la niña más bonita, y a pesar de ser sensible, la más fuerte",
+            "Tu belleza brilla más que cualquier estrella",
+            "Eres única, especial y quien me inspira",
             "Tu sonrisa puede cambiar cualquier día gris",
-            "Admiro tu fuerza y tu capacidad de superación",
-            "Como este cerezo, floreces con belleza y gracia"
+            "Como este cerezo, floreces con belleza y gracia",
+            "Y para mí, mi sol"
         ];
 
         function init() {
@@ -856,17 +856,17 @@
         function createBlossoms() {
             blossomsContainer.innerHTML = '';
             
-            // Crear pétalos individuales en la parte superior del árbol
-            for (let i = 0; i < 1000; i++) {
+            // Pétalos individuales en la parte superior del árbol
+            for (let i = 0; i < 4000; i++) {
                 const petal = document.createElement('div');
                 petal.className = 'single-petal';
                 
-                // Posicionar los pétalos solo en la parte superior del árbol
+                // Posicionar los pétalos
                 let x, y;
                 do {
                     x = Math.random() * 100;
-                    y = Math.random() * 40; // Solo en la parte superior (0% a 40%)
-                } while (x > 40 && x < 60 && y < 20); // Evitar el área del tronco
+                    y = Math.random() * 40;
+                } while (x > 40 && x < 60 && y < 20);
                 
                 petal.style.left = `${x}%`;
                 petal.style.top = `${y}%`;
@@ -907,7 +907,7 @@
             
             setTimeout(() => {
                 mainMessage.classList.remove('show');
-            }, 5000);
+            }, 8000);
         }
 
         function toggleFullscreen() {
@@ -976,5 +976,6 @@
     </script>
 </body>
 </html>
+
 
 
