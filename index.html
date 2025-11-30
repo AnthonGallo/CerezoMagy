@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Árbol de Cerezo Realista</title>
+    <title>Árbol de Cerezo con Pétalos Superiores</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -291,47 +290,23 @@
             pointer-events: none;
         }
 
-        .blossom-cluster {
+        .single-petal {
             position: absolute;
-            width: 80px;
-            height: 80px;
-        }
-
-        .blossom {
-            position: absolute;
-            width: 18px;
-            height: 18px;
-        }
-
-        .petal {
-            position: absolute;
-            width: 8px;
-            height: 10px;
+            width: 12px;
+            height: 14px;
             background: linear-gradient(135deg, #ffb3d9 0%, #ff9ec7 50%, #ffb3d9 100%);
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             box-shadow: 
                 0 0 5px rgba(255, 182, 193, 0.6),
                 inset -1px -1px 2px rgba(255, 255, 255, 0.5);
             transform-origin: center center;
+            animation: petal-sway 4s ease-in-out infinite;
         }
 
-        .night-mode .petal {
+        .night-mode .single-petal {
             box-shadow: 
                 0 0 5px rgba(255, 182, 193, 0.4),
                 inset -1px -1px 2px rgba(200, 200, 200, 0.3);
-        }
-
-        .petal-center {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: radial-gradient(circle at center, #fff59d, #ffd54f);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 3px rgba(255, 215, 0, 0.8);
-            z-index: 10;
         }
 
         .falling-petals {
@@ -347,8 +322,8 @@
 
         .falling-petal {
             position: absolute;
-            width: 8px;
-            height: 10px;
+            width: 12px;
+            height: 14px;
             background: linear-gradient(135deg, #ffb3d9, #ff9ec7);
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             opacity: 0;
@@ -604,7 +579,7 @@
             100% { transform: translateX(100vw); }
         }
 
-        @keyframes blossom-sway {
+        @keyframes petal-sway {
             0%, 100% { transform: translate(0, 0) rotate(0deg); }
             25% { transform: translate(2px, -2px) rotate(2deg); }
             50% { transform: translate(-1px, -1px) rotate(-1deg); }
@@ -881,49 +856,26 @@
         function createBlossoms() {
             blossomsContainer.innerHTML = '';
             
-            // Crear flores solo en las ramas, no en el tronco
-            for (let i = 0; i < 150; i++) {
-                const cluster = document.createElement('div');
-                cluster.className = 'blossom-cluster';
+            // Crear pétalos individuales en la parte superior del árbol
+            for (let i = 0; i < 250; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'single-petal';
                 
-                // Posicionar las flores solo en la parte superior del árbol
+                // Posicionar los pétalos solo en la parte superior del árbol
                 let x, y;
                 do {
                     x = Math.random() * 100;
-                    y = Math.random() * 140;
-                } while (y < 30 || (x > 40 && x < 60 && y < 70)); // Evitar el área del tronco
+                    y = Math.random() * 40; // Solo en la parte superior (0% a 40%)
+                } while (x > 40 && x < 60 && y < 20); // Evitar el área del tronco
                 
-                cluster.style.left = `${x}%`;
-                cluster.style.top = `${y}%`;
-                cluster.style.animation = `blossom-sway ${3 + Math.random() * 2}s ease-in-out infinite`;
-                cluster.style.animationDelay = `${Math.random() * 2}s`;
+                petal.style.left = `${x}%`;
+                petal.style.top = `${y}%`;
+                petal.style.animationDuration = `${3 + Math.random() * 3}s`;
+                petal.style.animationDelay = `${Math.random() * 2}s`;
+                petal.style.opacity = `${0.7 + Math.random() * 0.3}`;
+                petal.style.transform = `rotate(${Math.random() * 360}deg)`;
                 
-                const blossomsInCluster = 3 + Math.floor(Math.random() * 5);
-                for (let j = 0; j < blossomsInCluster; j++) {
-                    const blossom = document.createElement('div');
-                    blossom.className = 'blossom';
-                    blossom.style.left = `${Math.random() * 60}px`;
-                    blossom.style.top = `${Math.random() * 60}px`;
-                    
-                    for (let k = 0; k < 5; k++) {
-                        const petal = document.createElement('div');
-                        petal.className = 'petal';
-                        const angle = (k * 72) - 90;
-                        const distance = 5;
-                        petal.style.left = '50%';
-                        petal.style.top = '50%';
-                        petal.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateY(-${distance}px) rotate(${-angle}deg)`;
-                        blossom.appendChild(petal);
-                    }
-                    
-                    const center = document.createElement('div');
-                    center.className = 'petal-center';
-                    blossom.appendChild(center);
-                    
-                    cluster.appendChild(blossom);
-                }
-                
-                blossomsContainer.appendChild(cluster);
+                blossomsContainer.appendChild(petal);
             }
             
             isBlooming = true;
