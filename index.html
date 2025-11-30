@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Árbol de Cerezo Realista 3D</title>
+    <title>Árbol de Cerezo Realista</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -48,34 +48,6 @@
             background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
         }
 
-        .cosmic-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            color: var(--accent);
-            font-size: clamp(8px, 2vw, 12px);
-            animation: float 6s ease-in-out infinite;
-            opacity: 0.8;
-            z-index: 1;
-            text-shadow: 0 0 10px currentColor;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-
         .container {
             position: relative;
             width: 100%;
@@ -101,7 +73,7 @@
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 30%;
+            height: 25%;
             background: 
                 radial-gradient(ellipse at 20% 80%, #4a3428 10%, transparent 20%),
                 radial-gradient(ellipse at 80% 20%, #5d4037 10%, transparent 20%),
@@ -138,7 +110,7 @@
 
         .tree-container {
             position: absolute;
-            bottom: 30%;
+            bottom: 25%;
             left: 50%;
             transform: translateX(-50%);
             width: 80%;
@@ -497,7 +469,7 @@
         @keyframes petal-fall {
             0% { transform: translateY(-100px) rotate(0deg) translateZ(0); opacity: 0; }
             10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
+            90% { opacity: 0.6; }
             100% { transform: translateY(600px) rotate(360deg) translateZ(20px); opacity: 0; }
         }
 
@@ -586,8 +558,6 @@
     </style>
 </head>
 <body>
-    <div class="cosmic-particles"></div>
-
     <div class="container">
         <div class="message-container">
             <div class="message" id="mainMessage">Cada pétalo de este cerezo representa una de tus cualidades especiales</div>
@@ -676,27 +646,10 @@
             createBranches();
             createStars();
             createFireflies();
-            createCosmicParticles();
             showMessage(messages[0]);
             
             // Iniciar caída de pétalos
             setInterval(createFallingPetal, 500);
-        }
-
-        // Crear partículas cósmicas
-        function createCosmicParticles() {
-            const container = document.querySelector('.cosmic-particles');
-            setInterval(() => {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                const particles = ['✨', '🌟', '💫', '⭐', '🌠'];
-                particle.textContent = particles[Math.floor(Math.random() * particles.length)];
-                particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
-                particle.style.fontSize = (Math.random() * 8 + 8) + 'px';
-                container.appendChild(particle);
-                setTimeout(() => particle.remove(), 6000);
-            }, 300);
         }
 
         // Crear ramas del árbol con efecto 3D
@@ -748,7 +701,7 @@
         function createBlossoms() {
             blossoms.innerHTML = '';
             
-            for (let i = 0; i < 250; i++) {
+            for (let i = 0; i < 300; i++) {
                 const blossom = document.createElement('div');
                 
                 // Determinar el tipo de flor (normal, pétalo pequeño o racimo)
@@ -761,9 +714,9 @@
                     blossom.className = 'blossom cluster';
                 }
                 
-                // Posicionar en las ramas
+                // Posicionar en las ramas, incluyendo la parte superior
                 const x = 5 + Math.random() * 90;
-                const y = 50 + Math.random() * 250;
+                const y = 30 + Math.random() * 270; // Más alto para cubrir toda la copa
                 const size = 15 + Math.random() * 15;
                 const delay = Math.random() * 8;
                 const z = Math.random() * 40;
