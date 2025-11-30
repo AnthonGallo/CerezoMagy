@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Árbol de Cerezo Realista</title>
+    <title>Árbol de Cerezo con Flores Invertidas</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -298,14 +298,14 @@
 
         .blossom {
             position: absolute;
-            width: 18px;
-            height: 18px;
+            width: 24px;
+            height: 24px;
         }
 
         .petal {
             position: absolute;
-            width: 8px;
-            height: 10px;
+            width: 10px;
+            height: 12px;
             background: linear-gradient(135deg, #ffb3d9 0%, #ff9ec7 50%, #ffb3d9 100%);
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             box-shadow: 
@@ -322,8 +322,8 @@
 
         .petal-center {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 6px;
+            height: 6px;
             background: radial-gradient(circle at center, #fff59d, #ffd54f);
             border-radius: 50%;
             top: 50%;
@@ -346,8 +346,8 @@
 
         .falling-petal {
             position: absolute;
-            width: 8px;
-            height: 10px;
+            width: 10px;
+            height: 12px;
             background: linear-gradient(135deg, #ffb3d9, #ff9ec7);
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             opacity: 0;
@@ -880,17 +880,17 @@
         function createBlossoms() {
             blossomsContainer.innerHTML = '';
             
-            // Crear flores solo en las ramas, no en el tronco
+            // Crear flores solo en la parte inferior del árbol
             for (let i = 0; i < 150; i++) {
                 const cluster = document.createElement('div');
                 cluster.className = 'blossom-cluster';
                 
-                // Posicionar las flores solo en la parte superior del árbol
+                // Posicionar las flores en la parte inferior del árbol
                 let x, y;
                 do {
                     x = Math.random() * 100;
-                    y = Math.random() * 100;
-                } while (y < 30 || (x > 40 && x < 60 && y < 70)); // Evitar el área del tronco
+                    y = 70 + Math.random() * 30; // Solo en la parte inferior (70% a 100%)
+                } while (x > 40 && x < 60 && y > 80); // Evitar el área del tronco
                 
                 cluster.style.left = `${x}%`;
                 cluster.style.top = `${y}%`;
@@ -904,11 +904,12 @@
                     blossom.style.left = `${Math.random() * 60}px`;
                     blossom.style.top = `${Math.random() * 60}px`;
                     
+                    // Crear pétalos con forma más realista
                     for (let k = 0; k < 5; k++) {
                         const petal = document.createElement('div');
                         petal.className = 'petal';
                         const angle = (k * 72) - 90;
-                        const distance = 5;
+                        const distance = 8;
                         petal.style.left = '50%';
                         petal.style.top = '50%';
                         petal.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateY(-${distance}px) rotate(${-angle}deg)`;
