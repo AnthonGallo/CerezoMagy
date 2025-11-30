@@ -746,8 +746,8 @@
         let petalInterval;
         let petalBatchInterval;
         let currentBatch = 0;
-        const totalBatches = 8; // Dividimos los pétalos en 8 lotes
-        const petalsPerBatch = 500; // 500 pétalos por lote
+        const totalBatches = 5; // Reducido de 8 a 5 lotes
+        const petalsPerBatch = 500; // 500 pétalos por lote = 2500 total
 
         const messages = [
             "Eres la persona más valiente que conozco",
@@ -869,27 +869,27 @@
                 if (currentBatch >= totalBatches) {
                     clearInterval(petalBatchInterval);
                     isBlooming = true;
-                    petalInterval = setInterval(createFallingPetal, 300);
+                    petalInterval = setInterval(createFallingPetal, 400); // Reducido de 300 a 400
                 }
-            }, 100); // 100ms entre lotes
+            }, 150); // Aumentado de 100 a 150ms entre lotes
         }
 
         function createPetalBatch() {
-            // Áreas de distribución para los pétalos basadas en la estructura de ramas
+            // Áreas de distribución expandidas para cubrir más espacio
             const petalAreas = [
-                // Área central superior (puntas de ramas principales)
-                { xMin: 40, xMax: 60, yMin: 0, yMax: 15, density: 0.1 },
-                // Áreas laterales superiores (puntas de ramas secundarias)
-                { xMin: 20, xMax: 40, yMin: 5, yMax: 20, density: 0.15 },
-                { xMin: 60, xMax: 80, yMin: 5, yMax: 20, density: 0.15 },
-                // Áreas medias laterales
-                { xMin: 10, xMax: 30, yMin: 15, yMax: 35, density: 0.2 },
-                { xMin: 70, xMax: 90, yMin: 15, yMax: 35, density: 0.2 },
-                // Áreas inferiores laterales
-                { xMin: 5, xMax: 25, yMin: 30, yMax: 45, density: 0.15 },
-                { xMin: 75, xMax: 95, yMin: 30, yMax: 45, density: 0.15 },
-                // Área central media (evitar el tronco)
-                { xMin: 35, xMax: 65, yMin: 20, yMax: 40, density: 0.05 }
+                // Área central superior expandida hacia arriba
+                { xMin: 35, xMax: 65, yMin: 0, yMax: 20, density: 0.15 },
+                // Áreas laterales superiores expandidas
+                { xMin: 15, xMax: 45, yMin: 5, yMax: 25, density: 0.15 },
+                { xMin: 55, xMax: 85, yMin: 5, yMax: 25, density: 0.15 },
+                // Áreas medias laterales expandidas
+                { xMin: 5, xMax: 35, yMin: 15, yMax: 40, density: 0.2 },
+                { xMin: 65, xMax: 95, yMin: 15, yMax: 40, density: 0.2 },
+                // Áreas inferiores laterales expandidas
+                { xMin: 0, xMax: 30, yMin: 30, yMax: 50, density: 0.15 },
+                { xMin: 70, xMax: 100, yMin: 30, yMax: 50, density: 0.15 },
+                // Área central media expandida
+                { xMin: 30, xMax: 70, yMin: 20, yMax: 45, density: 0.1 }
             ];
             
             // Crear pétalos para este lote
@@ -897,7 +897,7 @@
                 const petal = document.createElement('div');
                 petal.className = 'single-petal';
                 
-                // Seleccionar un área aleatoria basada en la densidad
+                // Seleccionar un área aleatoria
                 const area = petalAreas[Math.floor(Math.random() * petalAreas.length)];
                 
                 // Posicionar el pétalo dentro del área seleccionada
@@ -908,8 +908,8 @@
                 petal.style.top = `${y}%`;
                 petal.style.animationDuration = `${3 + Math.random() * 3}s`;
                 petal.style.animationDelay = `${Math.random() * 2}s`;
-                petal.style.opacity = `${0.7 + Math.random() * 0.3}`;
-                petal.style.transform = `rotate(${Math.random() * 360}deg)`;
+                petal.style.opacity = `${0.6 + Math.random() * 0.4}`; // Mayor variación en opacidad
+                petal.style.transform = `rotate(${Math.random() * 360}deg) scale(${0.8 + Math.random() * 0.4})`; // Variación de tamaño
                 
                 blossomsContainer.appendChild(petal);
             }
@@ -920,13 +920,16 @@
             
             const petal = document.createElement('div');
             petal.className = 'falling-petal';
-            petal.style.left = `${10 + Math.random() * 80}%`;
+            petal.style.left = `${Math.random() * 100}%`; // Cubrir todo el ancho
             petal.style.top = `${-50}px`;
             petal.style.animationDuration = `${8 + Math.random() * 7}s`;
             petal.style.animationDelay = `${Math.random() * 2}s`;
+            petal.style.transform = `scale(${0.7 + Math.random() * 0.6})`; // Variación de tamaño
+            petal.style.opacity = `${0.3 + Math.random() * 0.7}`; // Variación de opacidad
             
             fallingPetals.appendChild(petal);
             
+            // Limpiar pétalos caídos después de un tiempo
             setTimeout(() => {
                 if (petal.parentNode) {
                     petal.remove();
