@@ -18,6 +18,8 @@
             --text-light: #ffffff;
             --sky-top: #87CEEB;
             --sky-bottom: #E0F6FF;
+            --night-top: #0a0e2a;
+            --night-bottom: #1a1a4a;
         }
 
         body {
@@ -30,6 +32,11 @@
             align-items: center;
             color: var(--text-light);
             line-height: 1.6;
+            transition: background 1.5s ease;
+        }
+
+        body.night-mode {
+            background: linear-gradient(to bottom, var(--night-top), var(--night-bottom));
         }
 
         .container {
@@ -61,12 +68,8 @@
             animation: float-cloud linear infinite;
         }
 
-        .cloud::before,
-        .cloud::after {
-            content: '';
-            position: absolute;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 100px;
+        .night-mode .cloud {
+            background: rgba(100, 100, 150, 0.4);
         }
 
         .scene {
@@ -82,7 +85,7 @@
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 35%;
+            height: 20%;
             background: linear-gradient(to bottom, 
                 #8FBC8F 0%,
                 #7FB77F 20%,
@@ -93,6 +96,18 @@
             );
             z-index: 2;
             box-shadow: inset 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: height 0.5s ease;
+        }
+
+        .night-mode .ground {
+            background: linear-gradient(to bottom, 
+                #5A8A5A 0%,
+                #4A6F4A 20%,
+                #3D5A3D 40%,
+                #2E4632 60%,
+                #1F3123 80%,
+                #152318 100%
+            );
         }
 
         .grass-layer {
@@ -112,6 +127,10 @@
             opacity: 0.6;
         }
 
+        .night-mode .grass-blade {
+            background: linear-gradient(to top, #1a3510, #2d5016);
+        }
+
         .dirt-layer {
             position: absolute;
             bottom: 0;
@@ -121,9 +140,13 @@
             z-index: 1;
         }
 
+        .night-mode .dirt-layer {
+            background: linear-gradient(to bottom, #4a3428, #3e2723, #2d1f1a);
+        }
+
         .tree-shadow {
             position: absolute;
-            bottom: 35%;
+            bottom: 20%;
             left: 50%;
             transform: translateX(-50%);
             width: 600px;
@@ -131,16 +154,18 @@
             background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.3), transparent);
             z-index: 2;
             filter: blur(15px);
+            transition: bottom 0.5s ease;
         }
 
         .tree-container {
             position: absolute;
-            bottom: 35%;
+            bottom: 20%;
             left: 50%;
             transform: translateX(-50%);
             width: 500px;
             height: 500px;
             z-index: 3;
+            transition: bottom 0.5s ease;
         }
 
         .trunk {
@@ -166,6 +191,14 @@
                 10px 0 20px rgba(0, 0, 0, 0.1),
                 inset -5px 0 15px rgba(0, 0, 0, 0.4),
                 inset 5px 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .night-mode .trunk {
+            box-shadow: 
+                -10px 0 20px rgba(0, 0, 0, 0.5),
+                10px 0 20px rgba(0, 0, 0, 0.3),
+                inset -5px 0 15px rgba(0, 0, 0, 0.6),
+                inset 5px 0 15px rgba(100, 100, 100, 0.1);
         }
 
         .trunk::before {
@@ -280,6 +313,12 @@
             transform-origin: center center;
         }
 
+        .night-mode .petal {
+            box-shadow: 
+                0 0 5px rgba(255, 182, 193, 0.4),
+                inset -1px -1px 2px rgba(200, 200, 200, 0.3);
+        }
+
         .petal-center {
             position: absolute;
             width: 4px;
@@ -326,6 +365,11 @@
                 0 0 40px rgba(255, 224, 102, 0.6),
                 0 0 80px rgba(255, 224, 102, 0.3);
             z-index: 1;
+            transition: opacity 1.5s ease;
+        }
+
+        .night-mode .sun {
+            opacity: 0;
         }
 
         .sun-ray {
@@ -337,6 +381,48 @@
             background: linear-gradient(to bottom, rgba(255, 224, 102, 0.5), transparent);
             transform-origin: top center;
             animation: rotate-ray 20s linear infinite;
+        }
+
+        .moon {
+            position: absolute;
+            top: 80px;
+            left: 120px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, #f5f5f5, #e0e0e0);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 30px rgba(255, 255, 255, 0.7),
+                0 0 60px rgba(255, 255, 255, 0.3);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        .night-mode .moon {
+            opacity: 1;
+        }
+
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        .night-mode .stars {
+            opacity: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite ease-in-out;
         }
 
         .controls-container {
@@ -373,9 +459,19 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
+        .night-mode .controls-toggle {
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
         .controls-toggle:hover {
             background: rgba(255, 255, 255, 0.4);
             transform: scale(1.1);
+        }
+
+        .night-mode .controls-toggle:hover {
+            background: rgba(0, 0, 0, 0.4);
         }
 
         .controls {
@@ -387,6 +483,11 @@
             border-radius: 50px;
             border: 2px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .night-mode .controls {
+            background: rgba(0, 0, 0, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
         .btn {
@@ -404,10 +505,20 @@
             white-space: nowrap;
         }
 
+        .night-mode .btn {
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
         .btn:hover {
             background: rgba(255, 255, 255, 0.5);
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .night-mode .btn:hover {
+            background: rgba(0, 0, 0, 0.5);
         }
 
         .fullscreen-btn {
@@ -431,9 +542,19 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
+        .night-mode .fullscreen-btn {
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
         .fullscreen-btn:hover {
             background: rgba(255, 255, 255, 0.5);
             transform: scale(1.1);
+        }
+
+        .night-mode .fullscreen-btn:hover {
+            background: rgba(0, 0, 0, 0.5);
         }
 
         .message-container {
@@ -464,6 +585,12 @@
             border: 2px solid rgba(255, 255, 255, 0.5);
         }
 
+        .night-mode .message {
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
         .message.show {
             opacity: 1;
             transform: translateY(0);
@@ -474,6 +601,11 @@
             font-weight: 700;
             color: #d63384;
             text-shadow: 0 2px 10px rgba(255, 105, 180, 0.3);
+        }
+
+        .night-mode .special-message {
+            color: #ff9ec7;
+            text-shadow: 0 2px 10px rgba(255, 158, 199, 0.5);
         }
 
         @keyframes float-cloud {
@@ -505,6 +637,11 @@
         @keyframes rotate-ray {
             from { transform: translate(-50%, -50%) rotate(0deg); }
             to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
         @media (max-width: 768px) {
@@ -540,6 +677,13 @@
                 top: 50px;
                 right: 50px;
             }
+            
+            .moon {
+                width: 60px;
+                height: 60px;
+                top: 50px;
+                left: 50px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -569,6 +713,8 @@
 <body>
     <div class="container">
         <div class="sun" id="sun"></div>
+        <div class="moon" id="moon"></div>
+        <div class="stars" id="stars"></div>
         <div class="clouds-container" id="clouds"></div>
         
         <div class="message-container">
@@ -607,6 +753,7 @@
             <i class="fas fa-chevron-up" id="toggleIcon"></i>
         </div>
         <div class="controls">
+            <button class="btn" id="dayNightBtn">Modo Noche</button>
             <button class="btn" id="blossomBtn">Hacer Florecer</button>
             <button class="btn" id="messageBtn">Mensaje Especial</button>
         </div>
@@ -615,6 +762,7 @@
     <script>
         const blossomBtn = document.getElementById('blossomBtn');
         const messageBtn = document.getElementById('messageBtn');
+        const dayNightBtn = document.getElementById('dayNightBtn');
         const mainMessage = document.getElementById('mainMessage');
         const branchesContainer = document.getElementById('branchesContainer');
         const blossomsContainer = document.getElementById('blossomsContainer');
@@ -622,12 +770,16 @@
         const grassLayer = document.getElementById('grassLayer');
         const clouds = document.getElementById('clouds');
         const sun = document.getElementById('sun');
+        const moon = document.getElementById('moon');
+        const stars = document.getElementById('stars');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const controlsContainer = document.getElementById('controlsContainer');
         const controlsToggle = document.getElementById('controlsToggle');
         const toggleIcon = document.getElementById('toggleIcon');
+        const body = document.body;
 
         let isBlooming = false;
+        let isNightMode = false;
         let messageIndex = 0;
         let controlsVisible = true;
         let petalInterval;
@@ -646,6 +798,7 @@
             createGrass();
             createClouds();
             createSunRays();
+            createStars();
             createBranches();
             showMessage(messages[0]);
         }
@@ -692,6 +845,20 @@
             }
         }
 
+        function createStars() {
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 70}%`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                stars.appendChild(star);
+            }
+        }
+
         function createBranches() {
             const branches = [
                 { x: 50, y: 0, width: 50, height: 180, rotation: -5, class: 'main-branch' },
@@ -734,11 +901,12 @@
         function createBlossoms() {
             blossomsContainer.innerHTML = '';
             
-            for (let i = 0; i < 120; i++) {
+            // Crear flores que cubran toda la copa del árbol, hasta la cima
+            for (let i = 0; i < 180; i++) {
                 const cluster = document.createElement('div');
                 cluster.className = 'blossom-cluster';
                 cluster.style.left = `${5 + Math.random() * 90}%`;
-                cluster.style.top = `${10 + Math.random() * 60}%`;
+                cluster.style.top = `${5 + Math.random() * 85}%`; // Más arriba para cubrir toda la copa
                 cluster.style.animation = `blossom-sway ${3 + Math.random() * 2}s ease-in-out infinite`;
                 cluster.style.animationDelay = `${Math.random() * 2}s`;
                 
@@ -822,6 +990,18 @@
             toggleIcon.className = controlsVisible ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
         }
 
+        function toggleDayNight() {
+            isNightMode = !isNightMode;
+            body.classList.toggle('night-mode', isNightMode);
+            dayNightBtn.textContent = isNightMode ? 'Modo Día' : 'Modo Noche';
+            
+            if (isNightMode) {
+                showMessage("La noche realza tu misterio y tu encanto");
+            } else {
+                showMessage("El día brilla con tu presencia");
+            }
+        }
+
         blossomBtn.addEventListener('click', () => {
             if (!isBlooming) {
                 createBlossoms();
@@ -848,6 +1028,7 @@
             }
         });
 
+        dayNightBtn.addEventListener('click', toggleDayNight);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         controlsToggle.addEventListener('click', toggleControls);
 
