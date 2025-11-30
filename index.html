@@ -744,6 +744,10 @@
         let messageIndex = 0;
         let controlsVisible = true;
         let petalInterval;
+        let petalBatchInterval;
+        let currentBatch = 0;
+        const totalBatches = 8; // Dividimos los pétalos en 8 lotes
+        const petalsPerBatch = 500; // 500 pétalos por lote
 
         const messages = [
             "Eres la persona más valiente que conozco",
@@ -855,18 +859,50 @@
 
         function createBlossoms() {
             blossomsContainer.innerHTML = '';
+            currentBatch = 0;
             
-            // Pétalos individuales en la parte superior del árbol
-            for (let i = 0; i < 1500; i++) {
+            // Crear los pétalos en lotes para mejorar el rendimiento
+            petalBatchInterval = setInterval(() => {
+                createPetalBatch();
+                currentBatch++;
+                
+                if (currentBatch >= totalBatches) {
+                    clearInterval(petalBatchInterval);
+                    isBlooming = true;
+                    petalInterval = setInterval(createFallingPetal, 300);
+                }
+            }, 100); // 100ms entre lotes
+        }
+
+        function createPetalBatch() {
+            // Áreas de distribución para los pétalos basadas en la estructura de ramas
+            const petalAreas = [
+                // Área central superior (puntas de ramas principales)
+                { xMin: 40, xMax: 60, yMin: 0, yMax: 15, density: 0.1 },
+                // Áreas laterales superiores (puntas de ramas secundarias)
+                { xMin: 20, xMax: 40, yMin: 5, yMax: 20, density: 0.15 },
+                { xMin: 60, xMax: 80, yMin: 5, yMax: 20, density: 0.15 },
+                // Áreas medias laterales
+                { xMin: 10, xMax: 30, yMin: 15, yMax: 35, density: 0.2 },
+                { xMin: 70, xMax: 90, yMin: 15, yMax: 35, density: 0.2 },
+                // Áreas inferiores laterales
+                { xMin: 5, xMax: 25, yMin: 30, yMax: 45, density: 0.15 },
+                { xMin: 75, xMax: 95, yMin: 30, yMax: 45, density: 0.15 },
+                // Área central media (evitar el tronco)
+                { xMin: 35, xMax: 65, yMin: 20, yMax: 40, density: 0.05 }
+            ];
+            
+            // Crear pétalos para este lote
+            for (let i = 0; i < petalsPerBatch; i++) {
                 const petal = document.createElement('div');
                 petal.className = 'single-petal';
                 
-                // Posicionar los pétalos
-                let x, y;
-                do {
-                    x = Math.random() * 100;
-                    y = Math.random() * 35;
-                } while (x > 40 && x < 60 && y < 20);
+                // Seleccionar un área aleatoria basada en la densidad
+                const area = petalAreas[Math.floor(Math.random() * petalAreas.length)];
+                
+                // Posicionar el pétalo dentro del área seleccionada
+                const x = area.xMin + Math.random() * (area.xMax - area.xMin);
+                const y = area.yMin + Math.random() * (area.yMax - area.yMin);
                 
                 petal.style.left = `${x}%`;
                 petal.style.top = `${y}%`;
@@ -877,9 +913,6 @@
                 
                 blossomsContainer.appendChild(petal);
             }
-            
-            isBlooming = true;
-            petalInterval = setInterval(createFallingPetal, 300);
         }
 
         function createFallingPetal() {
@@ -951,6 +984,7 @@
                 blossomsContainer.innerHTML = '';
                 fallingPetals.innerHTML = '';
                 if (petalInterval) clearInterval(petalInterval);
+                if (petalBatchInterval) clearInterval(petalBatchInterval);
                 blossomBtn.textContent = 'Hacer Florecer';
                 isBlooming = false;
                 showMessage("Tus cualidades permanecen, incluso cuando no son visibles");
@@ -976,8 +1010,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
