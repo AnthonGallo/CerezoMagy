@@ -879,13 +879,17 @@
                 
                 cloud.style.width = `${width}px`;
                 cloud.style.height = `${height}px`;
-                cloud.style.top = `${Math.random() * 30}%`;
+                // Nubes más bajas para mayor realismo
+                cloud.style.top = `${10 + Math.random() * 25}%`;
                 cloud.style.left = `${-20 + Math.random() * 120}%`;
                 cloud.style.animationDuration = `${80 + Math.random() * 80}s`;
                 cloud.style.animationDelay = `${Math.random() * 20}s`;
                 
                 // Añadir variación de opacidad para realismo
                 cloud.style.opacity = `${0.5 + Math.random() * 0.3}`;
+                
+                // Mejorar la forma de las nubes con bordes más suaves
+                cloud.style.borderRadius = `${Math.random() * 30 + 70}px / ${Math.random() * 20 + 40}px`;
                 
                 clouds.appendChild(cloud);
             }
@@ -976,18 +980,20 @@
         }
 
         function createPetalBatch() {
-            // Áreas de distribución ajustadas para que los pétalos estén MÁS BAJOS en las ramas
+            // Áreas de distribución ajustadas para dispersar más pétalos hacia abajo
             const petalAreas = [
-                // Área central - MÁS BAJA
-                { xMin: 30, xMax: 70, yMin: 15, yMax: 40, density: 0.2 },
-                // Áreas laterales - MÁS BAJAS
-                { xMin: 10, xMax: 40, yMin: 20, yMax: 45, density: 0.18 },
-                { xMin: 60, xMax: 90, yMin: 20, yMax: 45, density: 0.18 },
-                // Áreas medias laterales - MÁS BAJAS
-                { xMin: 0, xMax: 35, yMin: 25, yMax: 50, density: 0.16 },
-                { xMin: 65, xMax: 100, yMin: 25, yMax: 50, density: 0.16 },
-                // Áreas inferiores - más densidad
-                { xMin: 20, xMax: 80, yMin: 35, yMax: 60, density: 0.15 }
+                // Área central - MÁS BAJA y extendida hacia abajo
+                { xMin: 30, xMax: 70, yMin: 15, yMax: 45, density: 0.2 },
+                // Áreas laterales - MÁS BAJAS y extendidas hacia abajo
+                { xMin: 10, xMax: 40, yMin: 20, yMax: 50, density: 0.18 },
+                { xMin: 60, xMax: 90, yMin: 20, yMax: 50, density: 0.18 },
+                // Áreas medias laterales - MÁS BAJAS y extendidas hacia abajo
+                { xMin: 0, xMax: 35, yMin: 25, yMax: 55, density: 0.16 },
+                { xMin: 65, xMax: 100, yMin: 25, yMax: 55, density: 0.16 },
+                // Áreas inferiores - más densidad y más extendidas hacia abajo
+                { xMin: 20, xMax: 80, yMin: 35, yMax: 65, density: 0.15 },
+                // Nueva área inferior extendida para más dispersión hacia abajo
+                { xMin: 25, xMax: 75, yMin: 45, yMax: 70, density: 0.12 }
             ];
             
             // Crear pétalos para este lote
