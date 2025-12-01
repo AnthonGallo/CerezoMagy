@@ -71,6 +71,7 @@
             opacity: 0.7;
             animation: float-cloud linear infinite;
             will-change: transform;
+            filter: blur(1px);
         }
 
         .night-mode .cloud {
@@ -865,17 +866,26 @@
         }
 
         function createClouds() {
-            const cloudCount = isMobile ? 3 : 4;
+            // Más nubes con formas realistas pero optimizadas
+            const cloudCount = isMobile ? 5 : 7;
             for (let i = 0; i < cloudCount; i++) {
                 const cloud = document.createElement('div');
                 cloud.className = 'cloud';
-                const size = isMobile ? 40 + Math.random() * 40 : 60 + Math.random() * 60;
-                cloud.style.width = `${size}px`;
-                cloud.style.height = `${size * 0.6}px`;
+                
+                // Tamaños más variados para realismo
+                const baseSize = isMobile ? 40 + Math.random() * 40 : 60 + Math.random() * 60;
+                const width = baseSize * (1.5 + Math.random() * 0.5);
+                const height = baseSize * (0.4 + Math.random() * 0.3);
+                
+                cloud.style.width = `${width}px`;
+                cloud.style.height = `${height}px`;
                 cloud.style.top = `${Math.random() * 30}%`;
                 cloud.style.left = `${-20 + Math.random() * 120}%`;
                 cloud.style.animationDuration = `${80 + Math.random() * 80}s`;
                 cloud.style.animationDelay = `${Math.random() * 20}s`;
+                
+                // Añadir variación de opacidad para realismo
+                cloud.style.opacity = `${0.5 + Math.random() * 0.3}`;
                 
                 clouds.appendChild(cloud);
             }
@@ -897,21 +907,28 @@
         }
 
         function createBranches() {
-            // Estructura principal del árbol de cerezo
+            // Estructura principal del árbol de cerezo - más realista
             const branches = [
-                // Ramas principales
+                // Ramas principales - más curvas y naturales
                 { x: 50, y: 0, width: isMobile ? 8 : 10, height: isMobile ? 25 : 30, rotation: -5, class: 'main-branch' },
                 { x: 50, y: 0, width: isMobile ? 7 : 9, height: isMobile ? 23 : 28, rotation: 5, class: 'main-branch' },
                 
-                // Ramas secundarias - expandidas hacia los lados
-                { x: 25, y: isMobile ? 15 : 20, width: isMobile ? 6 : 7, height: isMobile ? 20 : 25, rotation: -40, class: 'secondary-branch' },
-                { x: 75, y: isMobile ? 15 : 20, width: isMobile ? 6 : 7, height: isMobile ? 20 : 25, rotation: 40, class: 'secondary-branch' },
+                // Ramas secundarias - expandidas hacia los lados con curvas naturales
+                { x: 25, y: isMobile ? 15 : 20, width: isMobile ? 6 : 7, height: isMobile ? 20 : 25, rotation: -35, class: 'secondary-branch' },
+                { x: 75, y: isMobile ? 15 : 20, width: isMobile ? 6 : 7, height: isMobile ? 20 : 25, rotation: 35, class: 'secondary-branch' },
                 
-                { x: 15, y: isMobile ? 25 : 30, width: isMobile ? 5 : 6, height: isMobile ? 18 : 22, rotation: -55, class: 'secondary-branch' },
-                { x: 85, y: isMobile ? 25 : 30, width: isMobile ? 5 : 6, height: isMobile ? 18 : 22, rotation: 55, class: 'secondary-branch' },
+                { x: 15, y: isMobile ? 25 : 30, width: isMobile ? 5 : 6, height: isMobile ? 18 : 22, rotation: -50, class: 'secondary-branch' },
+                { x: 85, y: isMobile ? 25 : 30, width: isMobile ? 5 : 6, height: isMobile ? 18 : 22, rotation: 50, class: 'secondary-branch' },
                 
-                { x: 10, y: isMobile ? 35 : 40, width: isMobile ? 4 : 5, height: isMobile ? 15 : 18, rotation: -70, class: 'secondary-branch' },
-                { x: 90, y: isMobile ? 35 : 40, width: isMobile ? 4 : 5, height: isMobile ? 15 : 18, rotation: 70, class: 'secondary-branch' },
+                { x: 10, y: isMobile ? 35 : 40, width: isMobile ? 4 : 5, height: isMobile ? 15 : 18, rotation: -65, class: 'secondary-branch' },
+                { x: 90, y: isMobile ? 35 : 40, width: isMobile ? 4 : 5, height: isMobile ? 15 : 18, rotation: 65, class: 'secondary-branch' },
+                
+                // Ramas adicionales para más realismo
+                { x: 35, y: isMobile ? 20 : 25, width: isMobile ? 5 : 6, height: isMobile ? 15 : 18, rotation: -20, class: 'secondary-branch' },
+                { x: 65, y: isMobile ? 20 : 25, width: isMobile ? 5 : 6, height: isMobile ? 15 : 18, rotation: 20, class: 'secondary-branch' },
+                
+                { x: 40, y: isMobile ? 30 : 35, width: isMobile ? 4 : 5, height: isMobile ? 12 : 15, rotation: -45, class: 'secondary-branch' },
+                { x: 60, y: isMobile ? 30 : 35, width: isMobile ? 4 : 5, height: isMobile ? 12 : 15, rotation: 45, class: 'secondary-branch' },
             ];
 
             branches.forEach(b => {
@@ -959,18 +976,18 @@
         }
 
         function createPetalBatch() {
-            // Áreas de distribución EXPANDIDAS hacia arriba y los lados
+            // Áreas de distribución ajustadas para que los pétalos estén MÁS BAJOS en las ramas
             const petalAreas = [
-                // Área central superior - MÁS ARRIBA
-                { xMin: 30, xMax: 70, yMin: 0, yMax: 25, density: 0.2 },
-                // Áreas laterales superiores - MÁS ARRIBA Y A LOS LADOS
-                { xMin: 10, xMax: 40, yMin: 5, yMax: 30, density: 0.18 },
-                { xMin: 60, xMax: 90, yMin: 5, yMax: 30, density: 0.18 },
-                // Áreas medias laterales - MÁS A LOS LADOS
-                { xMin: 0, xMax: 35, yMin: 15, yMax: 45, density: 0.16 },
-                { xMin: 65, xMax: 100, yMin: 15, yMax: 45, density: 0.16 },
-                // Áreas inferiores - menos densidad
-                { xMin: 20, xMax: 80, yMin: 30, yMax: 55, density: 0.12 }
+                // Área central - MÁS BAJA
+                { xMin: 30, xMax: 70, yMin: 15, yMax: 40, density: 0.2 },
+                // Áreas laterales - MÁS BAJAS
+                { xMin: 10, xMax: 40, yMin: 20, yMax: 45, density: 0.18 },
+                { xMin: 60, xMax: 90, yMin: 20, yMax: 45, density: 0.18 },
+                // Áreas medias laterales - MÁS BAJAS
+                { xMin: 0, xMax: 35, yMin: 25, yMax: 50, density: 0.16 },
+                { xMin: 65, xMax: 100, yMin: 25, yMax: 50, density: 0.16 },
+                // Áreas inferiores - más densidad
+                { xMin: 20, xMax: 80, yMin: 35, yMax: 60, density: 0.15 }
             ];
             
             // Crear pétalos para este lote
