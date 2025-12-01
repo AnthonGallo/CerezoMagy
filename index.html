@@ -66,15 +66,74 @@
 
         .cloud {
             position: absolute;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 100px;
-            opacity: 0.7;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            opacity: 0.8;
             animation: float-cloud linear infinite;
             will-change: transform;
+            filter: blur(1px);
+        }
+
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: inherit;
+            border-radius: 50%;
+        }
+
+        .cloud-1 {
+            width: 120px;
+            height: 40px;
+        }
+        .cloud-1::before {
+            width: 50px;
+            height: 50px;
+            top: -25px;
+            left: 15px;
+        }
+        .cloud-1::after {
+            width: 40px;
+            height: 40px;
+            top: -20px;
+            right: 20px;
+        }
+
+        .cloud-2 {
+            width: 100px;
+            height: 35px;
+        }
+        .cloud-2::before {
+            width: 45px;
+            height: 45px;
+            top: -20px;
+            left: 10px;
+        }
+        .cloud-2::after {
+            width: 35px;
+            height: 35px;
+            top: -15px;
+            right: 15px;
+        }
+
+        .cloud-3 {
+            width: 80px;
+            height: 30px;
+        }
+        .cloud-3::before {
+            width: 35px;
+            height: 35px;
+            top: -15px;
+            left: 8px;
+        }
+        .cloud-3::after {
+            width: 30px;
+            height: 30px;
+            top: -12px;
+            right: 12px;
         }
 
         .night-mode .cloud {
-            background: rgba(100, 100, 150, 0.4);
+            background: rgba(150, 150, 180, 0.6);
         }
 
         .scene {
@@ -267,28 +326,36 @@
 
         .branch {
             position: absolute;
-            background: linear-gradient(to bottom, #5d4037, #4e342e);
-            border-radius: 50%;
+            background: linear-gradient(to bottom, #5d4037, #4e342e, #3e2723);
+            border-radius: 20px;
             transform-origin: bottom center;
             box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.3);
         }
 
         .main-branch {
-            width: 8vw;
-            max-width: 50px;
+            width: 12px;
             background: linear-gradient(135deg, #4e342e, #5d4037, #4e342e);
         }
 
         .secondary-branch {
-            width: 6vw;
-            max-width: 30px;
+            width: 8px;
             background: linear-gradient(135deg, #4e342e, #5d4037);
         }
 
         .small-branch {
-            width: 3vw;
-            max-width: 15px;
+            width: 5px;
             background: linear-gradient(135deg, #3e2723, #4e342e);
+        }
+
+        .branch-tip {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #3e2723;
+            border-radius: 50%;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .blossoms-container {
@@ -683,6 +750,14 @@
                 bottom: 12vh;
                 height: 38vh;
             }
+
+            .branch {
+                border-radius: 15px;
+            }
+            
+            .main-branch { width: 10px; }
+            .secondary-branch { width: 7px; }
+            .small-branch { width: 4px; }
         }
 
         @media (max-width: 480px) {
@@ -727,6 +802,10 @@
                 width: 8px;
                 height: 10px;
             }
+
+            .main-branch { width: 8px; }
+            .secondary-branch { width: 6px; }
+            .small-branch { width: 3px; }
         }
 
         @media (max-height: 600px) {
@@ -865,17 +944,18 @@
         }
 
         function createClouds() {
-            const cloudCount = isMobile ? 3 : 4;
+            const cloudCount = isMobile ? 5 : 7; // Más nubes pero optimizadas
+            const cloudTypes = ['cloud-1', 'cloud-2', 'cloud-3'];
+            
             for (let i = 0; i < cloudCount; i++) {
                 const cloud = document.createElement('div');
-                cloud.className = 'cloud';
-                const size = isMobile ? 40 + Math.random() * 40 : 60 + Math.random() * 60;
-                cloud.style.width = `${size}px`;
-                cloud.style.height = `${size * 0.6}px`;
-                cloud.style.top = `${Math.random() * 30}%`;
+                const cloudType = cloudTypes[Math.floor(Math.random() * cloudTypes.length)];
+                cloud.className = `cloud ${cloudType}`;
+                
+                cloud.style.top = `${10 + Math.random() * 30}%`;
                 cloud.style.left = `${-20 + Math.random() * 120}%`;
-                cloud.style.animationDuration = `${80 + Math.random() * 80}s`;
-                cloud.style.animationDelay = `${Math.random() * 20}s`;
+                cloud.style.animationDuration = `${80 + Math.random() * 100}s`;
+                cloud.style.animationDelay = `${Math.random() * 30}s`;
                 
                 clouds.appendChild(cloud);
             }
@@ -897,45 +977,59 @@
         }
 
         function createBranches() {
-            // Estructura principal del árbol de cerezo
+            // Estructura de ramas más realista y orgánica
             const branches = [
-                // Ramas principales
-                { x: 50, y: 0, width: isMobile ? 8 : 10, height: isMobile ? 25 : 30, rotation: -5, class: 'main-branch' },
-                { x: 50, y: 0, width: isMobile ? 7 : 9, height: isMobile ? 23 : 28, rotation: 5, class: 'main-branch' },
+                // Ramas principales desde el tronco
+                { x: 50, y: 0, width: 12, height: 35, rotation: -15, class: 'main-branch' },
+                { x: 50, y: 0, width: 12, height: 40, rotation: 10, class: 'main-branch' },
+                { x: 50, y: 5, width: 10, height: 30, rotation: -5, class: 'main-branch' },
                 
-                // Ramas secundarias - expandidas hacia los lados
-                { x: 25, y: isMobile ? 15 : 20, width: isMobile ? 6 : 7, height: isMobile ? 20 : 25, rotation: -40, class: 'secondary-branch' },
-                { x: 75, y: isMobile ? 15 : 20, width: isMobile ? 6 : 7, height: isMobile ? 20 : 25, rotation: 40, class: 'secondary-branch' },
+                // Ramas secundarias - estructura más natural
+                { x: 45, y: 15, width: 8, height: 25, rotation: -45, class: 'secondary-branch' },
+                { x: 55, y: 15, width: 8, height: 25, rotation: 45, class: 'secondary-branch' },
+                { x: 40, y: 20, width: 8, height: 22, rotation: -60, class: 'secondary-branch' },
+                { x: 60, y: 20, width: 8, height: 22, rotation: 60, class: 'secondary-branch' },
                 
-                { x: 15, y: isMobile ? 25 : 30, width: isMobile ? 5 : 6, height: isMobile ? 18 : 22, rotation: -55, class: 'secondary-branch' },
-                { x: 85, y: isMobile ? 25 : 30, width: isMobile ? 5 : 6, height: isMobile ? 18 : 22, rotation: 55, class: 'secondary-branch' },
-                
-                { x: 10, y: isMobile ? 35 : 40, width: isMobile ? 4 : 5, height: isMobile ? 15 : 18, rotation: -70, class: 'secondary-branch' },
-                { x: 90, y: isMobile ? 35 : 40, width: isMobile ? 4 : 5, height: isMobile ? 15 : 18, rotation: 70, class: 'secondary-branch' },
+                // Ramas terciarias para mayor realismo
+                { x: 35, y: 25, width: 6, height: 18, rotation: -75, class: 'secondary-branch' },
+                { x: 65, y: 25, width: 6, height: 18, rotation: 75, class: 'secondary-branch' },
+                { x: 30, y: 30, width: 5, height: 15, rotation: -80, class: 'small-branch' },
+                { x: 70, y: 30, width: 5, height: 15, rotation: 80, class: 'small-branch' },
             ];
 
             branches.forEach(b => {
                 const branch = document.createElement('div');
                 branch.className = `branch ${b.class}`;
-                branch.style.width = `${b.width}%`;
+                branch.style.width = `${b.width}px`;
                 branch.style.height = `${b.height}%`;
                 branch.style.left = `${b.x}%`;
                 branch.style.bottom = `${b.y}%`;
                 branch.style.transform = `rotate(${b.rotation}deg)`;
+                
+                // Añadir punta de rama
+                const tip = document.createElement('div');
+                tip.className = 'branch-tip';
+                branch.appendChild(tip);
+                
                 branchesContainer.appendChild(branch);
             });
 
-            // Ramas pequeñas para dar realismo - menos en móvil
-            const smallBranchesCount = isMobile ? 25 : 40;
+            // Ramas pequeñas adicionales para densidad
+            const smallBranchesCount = isMobile ? 20 : 35;
             for (let i = 0; i < smallBranchesCount; i++) {
                 const branch = document.createElement('div');
                 branch.className = 'branch small-branch';
-                branch.style.width = `${isMobile ? 2 : 3}%`;
-                branch.style.height = `${isMobile ? 8 : 12}%`;
-                branch.style.left = `${5 + Math.random() * 90}%`;
-                branch.style.bottom = `${isMobile ? 10 : 15 + Math.random() * 50}%`;
-                branch.style.transform = `rotate(${-70 + Math.random() * 140}deg)`;
+                branch.style.width = `${3 + Math.random() * 2}px`;
+                branch.style.height = `${5 + Math.random() * 10}%`;
+                branch.style.left = `${20 + Math.random() * 60}%`;
+                branch.style.bottom = `${10 + Math.random() * 40}%`;
+                branch.style.transform = `rotate(${-60 + Math.random() * 120}deg)`;
                 branch.style.opacity = '0.7';
+                
+                const tip = document.createElement('div');
+                tip.className = 'branch-tip';
+                branch.appendChild(tip);
+                
                 branchesContainer.appendChild(branch);
             }
         }
@@ -959,18 +1053,20 @@
         }
 
         function createPetalBatch() {
-            // Áreas de distribución EXPANDIDAS hacia arriba y los lados
+            // Áreas de distribución MÁS ABAJO siguiendo la estructura de ramas
             const petalAreas = [
-                // Área central superior - MÁS ARRIBA
-                { xMin: 30, xMax: 70, yMin: 0, yMax: 25, density: 0.2 },
-                // Áreas laterales superiores - MÁS ARRIBA Y A LOS LADOS
-                { xMin: 10, xMax: 40, yMin: 5, yMax: 30, density: 0.18 },
-                { xMin: 60, xMax: 90, yMin: 5, yMax: 30, density: 0.18 },
-                // Áreas medias laterales - MÁS A LOS LADOS
-                { xMin: 0, xMax: 35, yMin: 15, yMax: 45, density: 0.16 },
-                { xMin: 65, xMax: 100, yMin: 15, yMax: 45, density: 0.16 },
-                // Áreas inferiores - menos densidad
-                { xMin: 20, xMax: 80, yMin: 30, yMax: 55, density: 0.12 }
+                // Áreas en las puntas de las ramas principales (más bajas)
+                { xMin: 40, xMax: 60, yMin: 15, yMax: 35, density: 0.25 },
+                // Áreas en ramas laterales izquierdas
+                { xMin: 20, xMax: 45, yMin: 20, yMax: 40, density: 0.2 },
+                // Áreas en ramas laterales derechas
+                { xMin: 55, xMax: 80, yMin: 20, yMax: 40, density: 0.2 },
+                // Áreas en ramas exteriores izquierdas
+                { xMin: 10, xMax: 35, yMin: 25, yMax: 45, density: 0.15 },
+                // Áreas en ramas exteriores derechas
+                { xMin: 65, xMax: 90, yMin: 25, yMax: 45, density: 0.15 },
+                // Área central inferior
+                { xMin: 35, xMax: 65, yMin: 30, yMax: 50, density: 0.05 }
             ];
             
             // Crear pétalos para este lote
