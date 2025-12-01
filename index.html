@@ -66,16 +66,49 @@
 
         .cloud {
             position: absolute;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 100px;
-            opacity: 0.7;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.9;
             animation: float-cloud linear infinite;
             will-change: transform;
-            filter: blur(1px);
+            filter: blur(8px);
+            box-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.8),
+                inset 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            filter: blur(5px);
+        }
+
+        .cloud::before {
+            width: 60%;
+            height: 60%;
+            top: -20%;
+            left: 10%;
+        }
+
+        .cloud::after {
+            width: 50%;
+            height: 50%;
+            top: -15%;
+            right: 10%;
         }
 
         .night-mode .cloud {
-            background: rgba(100, 100, 150, 0.4);
+            background: rgba(180, 180, 220, 0.7);
+            box-shadow: 
+                0 0 15px rgba(180, 180, 220, 0.6),
+                inset 0 0 15px rgba(200, 200, 230, 0.4);
+        }
+
+        .night-mode .cloud::before,
+        .night-mode .cloud::after {
+            background: rgba(180, 180, 220, 0.7);
         }
 
         .scene {
@@ -684,6 +717,12 @@
                 bottom: 12vh;
                 height: 38vh;
             }
+            
+            /* Ajustes específicos para móvil - pétalos más bajos */
+            .single-petal, .falling-petal {
+                width: 8px;
+                height: 10px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -725,8 +764,8 @@
             }
             
             .single-petal, .falling-petal {
-                width: 8px;
-                height: 10px;
+                width: 7px;
+                height: 9px;
             }
         }
 
@@ -866,30 +905,27 @@
         }
 
         function createClouds() {
-            // Más nubes con formas realistas pero optimizadas
-            const cloudCount = isMobile ? 5 : 7;
+            // Nubes más realistas con formas orgánicas
+            const cloudCount = isMobile ? 4 : 6;
             for (let i = 0; i < cloudCount; i++) {
                 const cloud = document.createElement('div');
                 cloud.className = 'cloud';
                 
-                // Tamaños más variados para realismo
-                const baseSize = isMobile ? 40 + Math.random() * 40 : 60 + Math.random() * 60;
-                const width = baseSize * (1.5 + Math.random() * 0.5);
-                const height = baseSize * (0.4 + Math.random() * 0.3);
+                // Tamaños más realistas para nubes
+                const baseSize = isMobile ? 60 + Math.random() * 60 : 80 + Math.random() * 80;
+                const width = baseSize * (1.8 + Math.random() * 0.8);
+                const height = baseSize * (0.5 + Math.random() * 0.4);
                 
                 cloud.style.width = `${width}px`;
                 cloud.style.height = `${height}px`;
-                // Nubes más bajas para mayor realismo
-                cloud.style.top = `${10 + Math.random() * 25}%`;
-                cloud.style.left = `${-20 + Math.random() * 120}%`;
-                cloud.style.animationDuration = `${80 + Math.random() * 80}s`;
-                cloud.style.animationDelay = `${Math.random() * 20}s`;
+                // Nubes más bajas y variadas en altura
+                cloud.style.top = `${5 + Math.random() * 30}%`;
+                cloud.style.left = `${-30 + Math.random() * 140}%`;
+                cloud.style.animationDuration = `${60 + Math.random() * 100}s`;
+                cloud.style.animationDelay = `${Math.random() * 30}s`;
                 
-                // Añadir variación de opacidad para realismo
-                cloud.style.opacity = `${0.5 + Math.random() * 0.3}`;
-                
-                // Mejorar la forma de las nubes con bordes más suaves
-                cloud.style.borderRadius = `${Math.random() * 30 + 70}px / ${Math.random() * 20 + 40}px`;
+                // Variación de opacidad para realismo
+                cloud.style.opacity = `${0.7 + Math.random() * 0.2}`;
                 
                 clouds.appendChild(cloud);
             }
@@ -980,21 +1016,37 @@
         }
 
         function createPetalBatch() {
-            // Áreas de distribución ajustadas para dispersar más pétalos hacia abajo
-            const petalAreas = [
-                // Área central - MÁS BAJA y extendida hacia abajo
-                { xMin: 30, xMax: 70, yMin: 15, yMax: 45, density: 0.2 },
-                // Áreas laterales - MÁS BAJAS y extendidas hacia abajo
-                { xMin: 10, xMax: 40, yMin: 20, yMax: 50, density: 0.18 },
-                { xMin: 60, xMax: 90, yMin: 20, yMax: 50, density: 0.18 },
-                // Áreas medias laterales - MÁS BAJAS y extendidas hacia abajo
-                { xMin: 0, xMax: 35, yMin: 25, yMax: 55, density: 0.16 },
-                { xMin: 65, xMax: 100, yMin: 25, yMax: 55, density: 0.16 },
-                // Áreas inferiores - más densidad y más extendidas hacia abajo
-                { xMin: 20, xMax: 80, yMin: 35, yMax: 65, density: 0.15 },
-                // Nueva área inferior extendida para más dispersión hacia abajo
-                { xMin: 25, xMax: 75, yMin: 45, yMax: 70, density: 0.12 }
-            ];
+            // Áreas de distribución ajustadas específicamente para móvil
+            let petalAreas;
+            
+            if (isMobile) {
+                // En móvil: pétalos MÁS BAJOS y mejor distribuidos
+                petalAreas = [
+                    // Área central - MÁS BAJA en móvil
+                    { xMin: 30, xMax: 70, yMin: 25, yMax: 55, density: 0.2 },
+                    // Áreas laterales - MÁS BAJAS en móvil
+                    { xMin: 10, xMax: 40, yMin: 30, yMax: 60, density: 0.18 },
+                    { xMin: 60, xMax: 90, yMin: 30, yMax: 60, density: 0.18 },
+                    // Áreas medias laterales - MÁS BAJAS en móvil
+                    { xMin: 0, xMax: 35, yMin: 35, yMax: 65, density: 0.16 },
+                    { xMin: 65, xMax: 100, yMin: 35, yMax: 65, density: 0.16 },
+                    // Áreas inferiores - más densidad y MÁS BAJAS en móvil
+                    { xMin: 20, xMax: 80, yMin: 45, yMax: 75, density: 0.15 },
+                    // Nueva área inferior extendida para móvil
+                    { xMin: 25, xMax: 75, yMin: 55, yMax: 80, density: 0.12 }
+                ];
+            } else {
+                // En escritorio: distribución normal
+                petalAreas = [
+                    { xMin: 30, xMax: 70, yMin: 15, yMax: 45, density: 0.2 },
+                    { xMin: 10, xMax: 40, yMin: 20, yMax: 50, density: 0.18 },
+                    { xMin: 60, xMax: 90, yMin: 20, yMax: 50, density: 0.18 },
+                    { xMin: 0, xMax: 35, yMin: 25, yMax: 55, density: 0.16 },
+                    { xMin: 65, xMax: 100, yMin: 25, yMax: 55, density: 0.16 },
+                    { xMin: 20, xMax: 80, yMin: 35, yMax: 65, density: 0.15 },
+                    { xMin: 25, xMax: 75, yMin: 45, yMax: 70, density: 0.12 }
+                ];
+            }
             
             // Crear pétalos para este lote
             for (let i = 0; i < petalsPerBatch; i++) {
